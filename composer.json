@@ -2,9 +2,15 @@
     "name": "mzur/laravel-openstack-swift",
     "description": "OpenStack Swift storage driver for Laravel/Lumen.",
     "type": "library",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/dit-werkt/laravel-cached-openstack.git"
+        }
+    ],
     "require": {
         "nimbusoft/flysystem-openstack-swift": "^1.0",
-        "biigle/laravel-cached-openstack": "^1.5",
+        "biigle/laravel-cached-openstack": "dev-master",
         "illuminate/support": "^9.0|^10.0",
         "illuminate/filesystem": "^9.0|^10.0"
     },

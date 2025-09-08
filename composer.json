@@ -11,8 +11,8 @@
     "require": {
         "nimbusoft/flysystem-openstack-swift": "^1.0",
         "biigle/laravel-cached-openstack": "dev-master",
-        "illuminate/support": "^9.0|^10.0",
-        "illuminate/filesystem": "^9.0|^10.0"
+        "illuminate/support": "^9.0|^10.0|^11.0",
+        "illuminate/filesystem": "^9.0|^10.0|^11.0"
     },
     "license": "MIT",
     "authors": [

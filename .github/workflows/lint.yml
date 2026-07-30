@@ -13,9 +13,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v4
+
+    # De standaard-PHP van de runner is te oud voor psalm 6 (dat >= 8.3.16 vereist).
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
       with:
-        fetch-depth: 1
+        php-version: '8.4'
+        coverage: none
 
     - name: Install Dependencies
       run: composer install --no-ansi --no-interaction

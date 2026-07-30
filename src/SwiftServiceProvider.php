@@ -3,6 +3,8 @@
 namespace Mzur\Filesystem;
 
 use Biigle\CachedOpenStack\OpenStack;
+use Closure;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
@@ -18,30 +20,45 @@ class SwiftServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->make('filesystem')->extend('swift', function($app, $config) {
-            $options = $this->getOsOptions($config);
-            $container = (new OpenStack($app->make('cache'), $options))
-                ->objectStoreV1()
-                ->getContainer($config['container']);
+        // Laravel 13 rebinds $this of *anonymous* driver callbacks to the
+        // FilesystemManager (Illuminate\Support\RebindsCallbacksToSelf). A closure
+        // made from a method is not anonymous, so it keeps this provider as $this.
+        $this->app->make('filesystem')
+            ->extend('swift', Closure::fromCallable([$this, 'createDriver']));
+    }
 
-            $prefix = Arr::get($config, 'root', Arr::get($config, 'prefix', ''));
-            $url = Arr::get($config, 'url', '');
-            $key = Arr::get($config, 'tempUrlKey', false);
+    /**
+     * Create the storage disk for the given configuration.
+     *
+     * @param Application $app
+     * @param array $config
+     *
+     * @return FilesystemAdapter
+     */
+    protected function createDriver($app, $config)
+    {
+        $options = $this->getOsOptions($config);
+        $container = (new OpenStack($app->make('cache'), $options))
+            ->objectStoreV1()
+            ->getContainer($config['container']);
 
-            if ($key) {
-                $adapter = new TempUrlSwiftAdapter($container, $key, $prefix, $url);
-            } else {
-                $adapter = new SwiftAdapter($container, $prefix, $url);
-            }
+        $prefix = Arr::get($config, 'root', Arr::get($config, 'prefix', ''));
+        $url = Arr::get($config, 'url', '');
+        $key = Arr::get($config, 'tempUrlKey', false);
 
-            $flyConfig = $this->getFlyConfig($config);
+        if ($key) {
+            $adapter = new TempUrlSwiftAdapter($container, $key, $prefix, $url);
+        } else {
+            $adapter = new SwiftAdapter($container, $prefix, $url);
+        }
 
-            return new FilesystemAdapter(
-                new Filesystem($adapter, $flyConfig),
-                $adapter,
-                $flyConfig
-            );
-        });
+        $flyConfig = $this->getFlyConfig($config);
+
+        return new FilesystemAdapter(
+            new Filesystem($adapter, $flyConfig),
+            $adapter,
+            $flyConfig
+        );
     }
 
     /**

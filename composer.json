@@ -9,10 +9,11 @@
         }
     ],
     "require": {
+        "php": "^8.0",
         "nimbusoft/flysystem-openstack-swift": "^1.0",
-        "biigle/laravel-cached-openstack": "dev-JA/laravel-12-support",
-        "illuminate/support": "^9.0|^10.0|^11.0|^12.0",
-        "illuminate/filesystem": "^9.0|^10.0|^11.0|^12.0"
+        "biigle/laravel-cached-openstack": "dev-JA/php-8_5-support",
+        "illuminate/support": "^9.0|^10.0|^11.0|^12.0|^13.0",
+        "illuminate/filesystem": "^9.0|^10.0|^11.0|^12.0|^13.0"
     },
     "license": "MIT",
     "authors": [
@@ -26,6 +27,11 @@
             "Mzur\\Filesystem\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Mzur\\Filesystem\\Tests\\": "tests/"
+        }
+    },
     "extra": {
         "laravel": {
             "providers": [
@@ -34,6 +40,13 @@
         }
     },
     "require-dev": {
-        "vimeo/psalm": "^4.12"
+        "vimeo/psalm": "^4.12|^6.0",
+        "phpunit/phpunit": "^9.6|^10.5|^11.0|^12.0",
+        "illuminate/config": "^9.0|^10.0|^11.0|^12.0|^13.0",
+        "illuminate/container": "^9.0|^10.0|^11.0|^12.0|^13.0",
+        "illuminate/cache": "^9.0|^10.0|^11.0|^12.0|^13.0"
+    },
+    "scripts": {
+        "test": "phpunit"
     }
 }

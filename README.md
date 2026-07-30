@@ -60,3 +60,17 @@ Additional configuration options:
 - `tempUrlKey`: The account or container level key for [temporary URLs](https://docs.openstack.org/swift/latest/api/temporary_url_middleware.html). If set, support for [temporary URLs](https://laravel.com/docs/master/filesystem#temporary-urls) is automatically enabled for the storage disk.
 
 - `ttl`: Override the duration the OpenStack authentication token should be cached (in seconds). Values that are longer than the `expires_at` of the token are ignored.
+
+## Tests
+
+```
+composer install
+composer test
+```
+
+The tests need no Swift and no network: they seed the token cache of
+`biigle/laravel-cached-openstack` with a stubbed Keystone token, so php-opencloud skips
+the authentication request and resolves the service endpoint from the stubbed catalog.
+
+`.github/workflows/tests.yml` runs the suite for every supported combination of PHP and
+Laravel.

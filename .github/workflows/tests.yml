@@ -56,5 +56,7 @@ jobs:
           --with "illuminate/container:^${{ matrix.laravel }}.0" \
           --with "illuminate/cache:^${{ matrix.laravel }}.0"
 
+    # Zonder --display-deprecations, want die optie bestaat pas vanaf PHPUnit 10 en op
+    # PHP 8.0 wordt PHPUnit 9.6 geïnstalleerd.
     - name: Run PHPUnit
-      run: ./vendor/bin/phpunit --display-deprecations
+      run: ./vendor/bin/phpunit
